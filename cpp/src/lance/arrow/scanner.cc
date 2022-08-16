@@ -89,6 +89,7 @@ void ScannerBuilder::Limit(int64_t limit, int64_t offset) {
     /// We need to limit the parallelism for Project to calculate LIMIT / Offset
     scanner->options()->batch_readahead = 1;
   }
+  scanner->options()->batch_readahead = 1;
 
   return scanner;
 }

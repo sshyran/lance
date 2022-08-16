@@ -79,10 +79,10 @@ class CocoConverter:
         images = download_uris(pd.Series(uris))
         arr = pa.BinaryArray.from_pandas(images)
         embedded = table.append_column(pa.field("image", pa.binary()), arr)
-        if fmt == 'parquet':
-            pq.write_table(embedded, output_path)
-        elif fmt == 'lance':
-            lance.write_table(embedded, output_path)
+        # if fmt == 'parquet':
+        #     pq.write_table(embedded, output_path)
+        # elif fmt == 'lance':
+        #     lance.write_table(embedded, output_path)
         return embedded
 
 

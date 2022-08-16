@@ -74,6 +74,10 @@ FileWriter::~FileWriter() {}
 ::arrow::Status FileWriter::Write(const std::shared_ptr<::arrow::RecordBatch>& batch) {
   metadata_->AddBatchLength(batch->num_rows());
 
+  fmt::print("Write array: batch={} first={} len={}\n",
+             batch_id_,
+             batch->GetColumnByName("image_id")->GetScalar(0).ValueOrDie()->ToString(),
+             batch->num_rows());
   for (const auto& field : lance_schema_->fields()) {
     ARROW_RETURN_NOT_OK(WriteArray(field, batch->GetColumnByName(field->name())));
   }
@@ -132,6 +136,12 @@ FileWriter::~FileWriter() {}
 
   ARROW_ASSIGN_OR_RAISE(auto pos, encoder->Write(storage_arr.ValueOrDie()));
   lookup_table_.SetPageInfo(field_id, batch_id_, pos, arr->length());
+  if (field->name() == "image_id") {
+    fmt::print("Write image id: batch={} arr={} pos={}\n",
+               batch_id_,
+               storage_arr.ValueOrDie()->ToString(),
+               pos);
+  }
   return ::arrow::Status::OK();
 }
 

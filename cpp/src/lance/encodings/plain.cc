@@ -32,10 +32,15 @@ namespace lance::encodings {
 
 PlainEncoder::PlainEncoder(std::shared_ptr<::arrow::io::OutputStream> out) : Encoder(out) {}
 
-::arrow::Result<int64_t> PlainEncoder::Write(std::shared_ptr<::arrow::Array> arr) {
+::arrow::Result<int64_t> PlainEncoder::Write(const std::shared_ptr<::arrow::Array>& arr) {
   auto data_type = arr->type();
 
   ARROW_ASSIGN_OR_RAISE(auto value_offset, out_->Tell());
+  fmt::print("Write primitive array@{}, type={}: {}\n",
+             value_offset,
+             data_type->ToString(),
+             arr->ToString());
+
   // TODO: support more types.
   switch (data_type->id()) {
     case ::arrow::Type::INT8:
@@ -55,7 +60,7 @@ PlainEncoder::PlainEncoder(std::shared_ptr<::arrow::io::OutputStream> out) : Enc
       break;
     case ::arrow::Type::INT32:
       ARROW_RETURN_NOT_OK(
-          out_->Write(std::reinterpret_pointer_cast<::arrow::Int32Array>(arr)->values()));
+          out_->Write(std::static_pointer_cast<::arrow::Int32Array>(arr)->values()));
       break;
     case ::arrow::Type::UINT32:
       ARROW_RETURN_NOT_OK(
@@ -63,7 +68,7 @@ PlainEncoder::PlainEncoder(std::shared_ptr<::arrow::io::OutputStream> out) : Enc
       break;
     case ::arrow::Type::INT64:
       ARROW_RETURN_NOT_OK(
-          out_->Write(std::reinterpret_pointer_cast<::arrow::Int64Array>(arr)->values()));
+          out_->Write(std::static_pointer_cast<::arrow::Int64Array>(arr)->values()));
       break;
     case ::arrow::Type::UINT64:
       ARROW_RETURN_NOT_OK(
@@ -71,11 +76,11 @@ PlainEncoder::PlainEncoder(std::shared_ptr<::arrow::io::OutputStream> out) : Enc
       break;
     case ::arrow::Type::FLOAT:
       ARROW_RETURN_NOT_OK(
-          out_->Write(std::reinterpret_pointer_cast<::arrow::FloatArray>(arr)->values()));
+          out_->Write(std::static_pointer_cast<::arrow::FloatArray>(arr)->values()));
       break;
     case ::arrow::Type::DOUBLE:
       ARROW_RETURN_NOT_OK(
-          out_->Write(std::reinterpret_pointer_cast<::arrow::DoubleArray>(arr)->values()));
+          out_->Write(std::static_pointer_cast<::arrow::DoubleArray>(arr)->values()));
       break;
     default:
       return Status::Invalid(

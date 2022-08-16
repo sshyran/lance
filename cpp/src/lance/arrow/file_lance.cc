@@ -73,6 +73,8 @@ bool LanceFileFormat::Equals(const FileFormat& other) const {
     offset = lance_fragment_scan_options->offset;
   }
 
+  ::arrow::SetCpuThreadPoolCapacity(1);
+
   auto batch_reader = lance::io::RecordBatchReader(
       reader, options, ::arrow::internal::GetCpuThreadPool(), limit, offset);
   ARROW_RETURN_NOT_OK(batch_reader.Open());

@@ -32,7 +32,7 @@ namespace lance::encodings {
 VarBinaryEncoder::VarBinaryEncoder(std::shared_ptr<::arrow::io::OutputStream> out) noexcept
     : Encoder(out) {}
 
-Result<int64_t> VarBinaryEncoder::Write(const std::shared_ptr<::arrow::Array> data) {
+Result<int64_t> VarBinaryEncoder::Write(const std::shared_ptr<::arrow::Array>& data) {
   ARROW_ASSIGN_OR_RAISE(auto start_offset, out_->Tell());
   auto arr = std::static_pointer_cast<::arrow::BinaryArray>(data);
   ARROW_RETURN_NOT_OK(out_->Write(arr->value_data()));
