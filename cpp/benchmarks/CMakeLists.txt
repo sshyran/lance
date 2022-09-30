@@ -58,3 +58,12 @@ target_link_libraries(
         argparse
 )
 target_include_directories(scan SYSTEM PRIVATE ${PARQUET_INCLUDE_DIR} ${ARROW_INCLUDE_DIR})
+
+add_executable(polygon polygon.cc)
+target_link_libraries(
+        scan
+        lance
+        lance_benchmark
+        argparse
+)
+target_include_directories(polygon SYSTEM PRIVATE ${PARQUET_INCLUDE_DIR} ${ARROW_INCLUDE_DIR})
