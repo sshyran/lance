@@ -85,6 +85,13 @@ class LanceDataset : public ::arrow::dataset::Dataset {
   /// Get the latest version of the dataset
   ::arrow::Result<DatasetVersion> latest_version() const;
 
+  /// Add columns to the dataset, and returns the new dataset.
+  ///
+  /// \param value the expression to compute the new column.
+  /// \return a new version of the dataset.
+  ::arrow::Result<std::shared_ptr<LanceDataset>> AddColumn(
+      ::arrow::compute::Expression value) const;
+
   std::string type_name() const override { return "lance"; }
 
   ::arrow::Result<std::shared_ptr<Dataset>> ReplaceSchema(

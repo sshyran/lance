@@ -241,6 +241,15 @@ LanceDataset::~LanceDataset() {}
   return manifest->GetDatasetVersion();
 }
 
+::arrow::Result<std::shared_ptr<LanceDataset>> LanceDataset::AddColumn(
+    ::arrow::compute::Expression value) const {
+  auto fields = ::arrow::compute::FieldsInExpression(value);
+  for (auto field : fields) {
+    // CHECK field exists.
+  }
+  return ::arrow::Status::NotImplemented("Not implemented");
+}
+
 ::arrow::Result<std::shared_ptr<::arrow::dataset::Dataset>> LanceDataset::ReplaceSchema(
     [[maybe_unused]] std::shared_ptr<::arrow::Schema> schema) const {
   return std::make_shared<LanceDataset>(*this);
